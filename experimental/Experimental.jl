@@ -21,6 +21,7 @@ const orderedpkgs = [
   "JuLie",	     # needs to be after LieAlgebras to correctly import `weight`
   "IntersectionTheory",
   "OrthogonalDiscriminants",  # needs code from JuLie
+  "TropicalRootCounts"
 ]
 exppkgs = filter(x->isdir(joinpath(expdir, x)) && !(x in oldexppkgs) && !(x in orderedpkgs), readdir(expdir))
 append!(exppkgs, orderedpkgs)
