@@ -3,7 +3,7 @@
 # These functions should probably be in OSCAR
 ###
 import Oscar.coefficient_ring
-function coefficient_ring(F::Vector{<:MPolyElem})
+function coefficient_ring(F::Vector{<:MPolyRingElem})
     return coefficient_ring(first(F))
 end
 import Oscar.ngens
@@ -11,10 +11,10 @@ function ngens(K::AbstractAlgebra.Generic.RationalFunctionField)
     return length(gens(K))
 end
 import Oscar.polynomial_ring
-function polynomial_ring(F::Vector{<:MPolyElem})
+function polynomial_ring(F::Vector{<:MPolyRingElem})
     return polynomial_ring(first(F))
 end
-function polynomial_ring(f::MPolyElem)
+function polynomial_ring(f::MPolyRingElem)
     return parent(f)
 end
 
@@ -23,8 +23,8 @@ end
 # Our functions:
 ###
 function construct_substitution_homomorphism(polynomialRing::MPolyRing,
-                                             variablesToBeSubstituted::Vector{<:MPolyElem},
-                                             polynomialsToSubstitute::Vector{<:MPolyElem})
+                                             variablesToBeSubstituted::Vector{<:MPolyRingElem},
+                                             polynomialsToSubstitute::Vector{<:MPolyRingElem})
 
     ###
     # Construct codomain of the substitution homomorphism
@@ -57,7 +57,7 @@ function construct_substitution_homomorphism(polynomialRing::MPolyRing,
 end
 
 
-function modify_vertically(polynomialSystem::Vector{<:MPolyElem})
+function modify_vertically(polynomialSystem::Vector{<:MPolyRingElem})
 
     # Construct a list of distinct monomials (sorted for the sake of consistency)
     Kax = polynomial_ring(polynomialSystem)
@@ -101,7 +101,7 @@ function construct_specialization_homomorphism(Kax::MPolyRing; choiceOfCoefficie
 
 end
 
-function tropically_generic_specialization_linear(parametrizedLinearSystem::Vector{<:MPolyElem};
+function tropically_generic_specialization_linear(parametrizedLinearSystem::Vector{<:MPolyRingElem};
                                                   genericChoiceOfParameters::Vector{<:RingElem}=nothing,
                                                   check_genericity::Bool=true)
 
@@ -138,7 +138,7 @@ function tropically_generic_specialization_linear(parametrizedLinearSystem::Vect
     return linearSystem
 end
 
-function tropically_generic_specialization_binomial(parametrizedBinomialIdeal::Vector{<:MPolyElem};
+function tropically_generic_specialization_binomial(parametrizedBinomialIdeal::Vector{<:MPolyRingElem};
                                                     choice_of_parameter::Vector{<:RingElem}=nothing,
                                                     check_genericity::Bool=true)
 
@@ -160,7 +160,7 @@ function tropically_generic_specialization_binomial(parametrizedBinomialIdeal::V
     return binomialSystem
 end
 
-function tropically_generic_specialization(parametrizedPolynomialSystem::Vector{<:MPolyElem};
+function tropically_generic_specialization(parametrizedPolynomialSystem::Vector{<:MPolyRingElem};
                                            choice_of_parameters::Vector{<:RingElem}=nothing,
                                            check_genericity::Bool=true)
 
@@ -177,7 +177,7 @@ function tropically_generic_specialization(parametrizedPolynomialSystem::Vector{
 end
 
 
-function bergman_fan_from_linear_equation_matrix(linearEquationsMatrix::fmpq_mat)
+function bergman_fan_from_linear_equation_matrix(linearEquationsMatrix::QQMatrix)
     ###
     # Compute the projection matrix onto the (orthogonal) complement of the linear space,
     # or in other words the images of the unit vectors projected onto the complement
@@ -278,8 +278,8 @@ function tropical_stable_intersection_after_perturbation(TropL::TropicalLinearSp
     projectedRandomDirection = matrix(QQ,randomDirection)*projectionMatrix
 
 
-    stableIntersectionPoints = fmpq_mat[]
-    stableIntersectionMults = fmpz[]
+    stableIntersectionPoints = QQMatrix[]
+    stableIntersectionMults = ZZRingElem[]
     indicesOfCones = ray_indices(maximal_polyhedra(TropL))
     nRaysPerCone = sum(indicesOfCones[1,:])
     for i in 1:nrows(indicesOfCones)
@@ -309,8 +309,8 @@ function tropical_stable_intersection_after_perturbation(TropL::TropicalLinearSp
     return stableIntersectionPoints,stableIntersectionMults,projectedRandomDirection
 end
 
-function tropicalize_first_intersect_second(linearEquationsToBeTropicalized::fmpq_mat,
-                                            linearEquationsNotToBeTropicalized::fmpq_mat;
+function tropicalize_first_intersect_second(linearEquationsToBeTropicalized::QQMatrix,
+                                            linearEquationsNotToBeTropicalized::QQMatrix;
                                             randomDirection=nothing,
                                             bergmanFan=nothing)
 
@@ -350,8 +350,8 @@ function tropicalize_first_intersect_second(linearEquationsToBeTropicalized::fmp
     projectedRandomDirection = randomDirection*projectionMatrix
 
 
-    stableIntersectionPoints = fmpq_mat[]
-    stableIntersectionMults = fmpz[]
+    stableIntersectionPoints = QQMatrix[]
+    stableIntersectionMults = ZZRingElem[]
     indicesOfCones = ray_indices(maximal_cones(bergmanFan))
     for i in 1:nrows(indicesOfCones)
         # read off rays of the projected cone
