@@ -2,7 +2,9 @@ module TropicalRootCounts
 
 using ..Oscar
 
-export test_function
+export tropical_vertical_root_bound
+export tropically_generic_specialization
+export modify_vertically
 
 include("Functions.jl")
 
